@@ -12,15 +12,34 @@
   <body>
     <div id="root"></div>
   
+
 <script>
 (function(){
-  var a=document.createElement('a');
-  a.href='muscle-table.html'; a.target='_blank'; a.rel='noopener';
-  a.textContent='\uD83D\uDCAA Interactive muscle table';
-  a.style.cssText='position:fixed;right:14px;bottom:14px;z-index:40;background:#2557d6;color:#fff;text-decoration:none;font:700 13.5px -apple-system,system-ui,sans-serif;padding:11px 15px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:none';
-  document.body.appendChild(a);
-  function upd(){ a.style.display = location.hash.indexOf('#/research/phase2')===0 ? 'block' : 'none'; }
-  window.addEventListener('hashchange', upd); setInterval(upd, 500); upd();
+  function ensure(){
+    var onHub = location.hash.indexOf('#/research/phase2') === 0;
+    var el = document.getElementById('mt-card');
+    if (!onHub) { if (el) el.remove(); return; }
+    if (el && document.body.contains(el)) return;
+    var page = document.querySelector('.page');
+    if (!page) return;
+    var card = document.createElement('a');
+    card.id = 'mt-card';
+    card.href = 'muscle-table.html';
+    card.target = '_blank'; card.rel = 'noopener';
+    card.style.cssText = 'display:block;margin:0 0 12px;padding:14px 16px;border:1px solid #2557d6;border-radius:14px;background:linear-gradient(135deg,#eef4ff,#ffffff);text-decoration:none;color:inherit';
+    card.innerHTML = '<div style="display:flex;align-items:center;gap:12px">'
+      + '<div style="font-size:26px">\uD83D\uDCAA</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-weight:800;font-size:1.05rem;color:#2557d6">Interactive muscle table</div>'
+      + '<div style="font-size:.86rem;color:#55667c;margin-top:2px">Per posture: muscles, what they do, attachments, how to find them, dose ranges and movements \u2014 with filters. Opens in a new tab.</div>'
+      + '</div><div style="font-size:20px;color:#2557d6">\u2192</div></div>';
+    var warn = page.querySelector('.warn');
+    if (warn && warn.parentNode === page) warn.after(card);
+    else page.prepend(card);
+  }
+  setInterval(ensure, 400);
+  window.addEventListener('hashchange', ensure);
+  ensure();
 })();
 </script>
 </body>
